@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using static GoAir.Common.EntityValidation.Airport;
+
 namespace GoAir.Models
 {
     public class Airport
@@ -7,14 +9,14 @@ namespace GoAir.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(NameMaxLength)]
         public string Name { get; set; } = null!;
 
         [Required]
-        [StringLength(100)]
+        [StringLength(CityMaxLength)]
         public string City { get; set; } = null!;
 
-        [Range(1, 10)]
+        [Range(MinTerminals, MaxTerminals)]
         public int Terminals { get; set; }
     }
 }

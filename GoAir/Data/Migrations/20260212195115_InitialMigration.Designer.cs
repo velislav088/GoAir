@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoAir.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260209160608_InitialMigration")]
+    [Migration("20260212195115_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -43,8 +43,8 @@ namespace GoAir.Data.Migrations
 
                     b.Property<string>("Model")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -100,6 +100,7 @@ namespace GoAir.Data.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Status")

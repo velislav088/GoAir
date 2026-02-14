@@ -16,6 +16,11 @@ namespace GoAir.Data
             base.OnModelCreating(builder);
 
             builder.Entity<Flight>()
+                .Property(f => f.Price)
+                .HasPrecision(18, 2);
+
+
+            builder.Entity<Flight>()
                 .HasOne(f => f.DepartureAirport)
                 .WithMany()
                 .HasForeignKey(f => f.DepartureAirportId)
@@ -27,6 +32,5 @@ namespace GoAir.Data
                 .HasForeignKey(f => f.ArrivalAirportId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
-
     }
 }

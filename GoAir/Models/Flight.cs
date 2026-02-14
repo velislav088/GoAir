@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using static GoAir.Common.EntityValidation.Flight;
+
 namespace GoAir.Models
 {
     public class Flight
@@ -7,10 +9,10 @@ namespace GoAir.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(10)]
+        [StringLength(FlightNumberMaxLength)]
         public string FlightNumber { get; set; } = null!;
 
-        [Range(0, 100000)]
+        [Range(MinPrice, MaxPrice)]
         public decimal Price { get; set; }
 
         [Required]
@@ -21,7 +23,6 @@ namespace GoAir.Models
         [Required]
         public int DepartureAirportId { get; set; }
 
-        [Required]
         public Airport DepartureAirport { get; set; } = null!;
 
         [Required]

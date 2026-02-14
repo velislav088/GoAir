@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using static GoAir.Common.EntityValidation.Aircraft;
+
 namespace GoAir.Models
 {
     public class Aircraft
@@ -7,14 +9,14 @@ namespace GoAir.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(ModelMaxLength)]
         public string Model { get; set; } = null!;
 
         [Required]
-        [StringLength(100)]
+        [StringLength(ManufacturerMaxLength)]
         public string Manufacturer { get; set; } = null!;
 
-        [Range(1, 600)]
+        [Range(MinCapacity, MaxCapacity)]
         public int Capacity { get; set; }
     }
 }

@@ -1,0 +1,62 @@
+﻿@model GoAir.ViewModels.CreateFlightViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Flight</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FlightNumber" class="control-label"></label>
+                <input asp-for="FlightNumber" class="form-control" />
+                <span asp-validation-for="FlightNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DepartureTime" class="control-label"></label>
+                <input asp-for="DepartureTime" class="form-control" />
+                <span asp-validation-for="DepartureTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<FlightStatus>()"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DepartureAirportId" class="control-label"></label>
+                <select asp-for="DepartureAirportId" class ="form-control" asp-items="ViewBag.DepartureAirportId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArrivalAirportId" class="control-label"></label>
+                <select asp-for="ArrivalAirportId" class ="form-control" asp-items="ViewBag.ArrivalAirportId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AircraftId"></label>
+                <select asp-for="AircraftId" class="form-control" asp-items="ViewBag.AircraftId"></select>
+                <span asp-validation-for="AircraftId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

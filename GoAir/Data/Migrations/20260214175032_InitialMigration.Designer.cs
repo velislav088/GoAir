@@ -4,6 +4,7 @@ using GoAir.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoAir.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260214175032_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,9 +79,6 @@ namespace GoAir.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AircraftId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("ArrivalAirportId")
                         .HasColumnType("uniqueidentifier");
 
@@ -101,8 +101,6 @@ namespace GoAir.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AircraftId");
 
                     b.HasIndex("ArrivalAirportId");
 
@@ -315,25 +313,17 @@ namespace GoAir.Data.Migrations
 
             modelBuilder.Entity("GoAir.Models.Flight", b =>
                 {
-                    b.HasOne("GoAir.Models.Aircraft", "Aircraft")
-                        .WithMany("Flights")
-                        .HasForeignKey("AircraftId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("GoAir.Models.Airport", "ArrivalAirport")
-                        .WithMany("ArrivingFlights")
+                        .WithMany()
                         .HasForeignKey("ArrivalAirportId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("GoAir.Models.Airport", "DepartureAirport")
-                        .WithMany("DepartingFlights")
+                        .WithMany()
                         .HasForeignKey("DepartureAirportId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Aircraft");
 
                     b.Navigation("ArrivalAirport");
 
@@ -389,18 +379,6 @@ namespace GoAir.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("GoAir.Models.Aircraft", b =>
-                {
-                    b.Navigation("Flights");
-                });
-
-            modelBuilder.Entity("GoAir.Models.Airport", b =>
-                {
-                    b.Navigation("ArrivingFlights");
-
-                    b.Navigation("DepartingFlights");
                 });
 #pragma warning restore 612, 618
         }

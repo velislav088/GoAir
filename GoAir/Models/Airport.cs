@@ -6,7 +6,7 @@ namespace GoAir.Models
 {
     public class Airport
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(NameMaxLength)]
@@ -18,5 +18,10 @@ namespace GoAir.Models
 
         [Range(MinTerminals, MaxTerminals)]
         public int Terminals { get; set; }
+
+        public ICollection<Flight> DepartingFlights { get; set; } = new HashSet<Flight>();
+
+        public ICollection<Flight> ArrivingFlights { get; set; } = new HashSet<Flight>();
+
     }
 }

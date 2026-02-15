@@ -6,7 +6,7 @@ namespace GoAir.Models
 {
     public class Flight
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(FlightNumberMaxLength)]
@@ -21,14 +21,18 @@ namespace GoAir.Models
         public FlightStatus Status { get; set; }
 
         [Required]
-        public int DepartureAirportId { get; set; }
+        public Guid DepartureAirportId { get; set; }
 
         public Airport DepartureAirport { get; set; } = null!;
 
         [Required]
-        public int ArrivalAirportId { get; set; }
+        public Guid ArrivalAirportId { get; set; }
 
-        [Required]
         public Airport ArrivalAirport { get; set; } = null!;
+
+        public Guid? AircraftId { get; set; }
+
+        public Aircraft? Aircraft { get; set; }
+
     }
 }

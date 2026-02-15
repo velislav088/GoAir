@@ -22,14 +22,20 @@ namespace GoAir.Data
 
             builder.Entity<Flight>()
                 .HasOne(f => f.DepartureAirport)
-                .WithMany()
+                .WithMany(a => a.DepartingFlights)
                 .HasForeignKey(f => f.DepartureAirportId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Flight>()
                 .HasOne(f => f.ArrivalAirport)
-                .WithMany()
+                .WithMany(a => a.ArrivingFlights)
                 .HasForeignKey(f => f.ArrivalAirportId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Flight>()
+                .HasOne(f => f.Aircraft)
+                .WithMany(a => a.Flights)
+                .HasForeignKey(f => f.AircraftId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

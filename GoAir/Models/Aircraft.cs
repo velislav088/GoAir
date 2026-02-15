@@ -6,7 +6,7 @@ namespace GoAir.Models
 {
     public class Aircraft
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(ModelMaxLength)]
@@ -18,5 +18,7 @@ namespace GoAir.Models
 
         [Range(MinCapacity, MaxCapacity)]
         public int Capacity { get; set; }
+
+        public ICollection<Flight> Flights { get; set; } = new HashSet<Flight>();
     }
 }

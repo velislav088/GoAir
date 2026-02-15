@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoAir.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260212195115_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20260215162813_AddAircraftToFlight")]
+    partial class AddAircraftToFlight
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,9 @@ namespace GoAir.Data.Migrations
 
             modelBuilder.Entity("GoAir.Models.Aircraft", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
@@ -53,11 +51,9 @@ namespace GoAir.Data.Migrations
 
             modelBuilder.Entity("GoAir.Models.Airport", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -79,17 +75,18 @@ namespace GoAir.Data.Migrations
 
             modelBuilder.Entity("GoAir.Models.Flight", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("AircraftId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ArrivalAirportId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ArrivalAirportId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("DepartureAirportId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DepartureAirportId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DepartureTime")
                         .HasColumnType("datetime2");
@@ -107,6 +104,8 @@ namespace GoAir.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AircraftId");
 
                     b.HasIndex("ArrivalAirportId");
 
@@ -319,17 +318,25 @@ namespace GoAir.Data.Migrations
 
             modelBuilder.Entity("GoAir.Models.Flight", b =>
                 {
+                    b.HasOne("GoAir.Models.Aircraft", "Aircraft")
+                        .WithMany("Flights")
+                        .HasForeignKey("AircraftId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("GoAir.Models.Airport", "ArrivalAirport")
-                        .WithMany()
+                        .WithMany("ArrivingFlights")
                         .HasForeignKey("ArrivalAirportId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("GoAir.Models.Airport", "DepartureAirport")
-                        .WithMany()
+                        .WithMany("DepartingFlights")
                         .HasForeignKey("DepartureAirportId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Aircraft");
 
                     b.Navigation("ArrivalAirport");
 
@@ -385,6 +392,18 @@ namespace GoAir.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GoAir.Models.Aircraft", b =>
+                {
+                    b.Navigation("Flights");
+                });
+
+            modelBuilder.Entity("GoAir.Models.Airport", b =>
+                {
+                    b.Navigation("ArrivingFlights");
+
+                    b.Navigation("DepartingFlights");
                 });
 #pragma warning restore 612, 618
         }

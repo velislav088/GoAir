@@ -6,14 +6,9 @@ using GoAir.Models;
 
 namespace GoAir.Controllers
 {
-    public class AircraftController : Controller
+    public class AircraftController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public AircraftController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Aircraft
         public async Task<IActionResult> Index()

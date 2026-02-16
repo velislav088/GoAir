@@ -1,21 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GoAir.Data;
+using GoAir.Models;
+using GoAir.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-using GoAir.Data;
-using GoAir.Models;
-using GoAir.ViewModels;
-
 namespace GoAir.Controllers
 {
-    public class FlightsController : Controller
+    public class FlightsController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public FlightsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Flights
         public async Task<IActionResult> Index()
@@ -24,7 +18,7 @@ namespace GoAir.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Flights/Details/5
+        // GET: Flights/Details
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -54,8 +48,6 @@ namespace GoAir.Controllers
         }
 
         // POST: Flights/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateFlightViewModel model)
@@ -79,10 +71,13 @@ namespace GoAir.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ArrivalAirportId"] = new SelectList(_context.Airports, "Id", "City", model.ArrivalAirportId);
+            ViewData["DepartureAirportId"] = new SelectList(_context.Airports, "Id", "City", model.DepartureAirportId);
+            ViewData["AircraftId"] = new SelectList(_context.Aircrafts, "Id", "Model", model.AircraftId);
             return View(model);
         }
 
-        // GET: Flights/Edit/5
+        // GET: Flights/Edit
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -112,9 +107,7 @@ namespace GoAir.Controllers
         }
 
 
-        // POST: Flights/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Flights/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, EditFlightViewModel model)
@@ -147,12 +140,13 @@ namespace GoAir.Controllers
 
             ViewData["DepartureAirportId"] =
                 new SelectList(_context.Airports, "Id", "City", model.DepartureAirportId);
+            ViewData["AircraftId"] = new SelectList(_context.Aircrafts, "Id", "Model", model.AircraftId);
 
             return View(model);
         }
 
 
-        // GET: Flights/Delete/5
+        // GET: Flights/Delete
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -172,7 +166,7 @@ namespace GoAir.Controllers
             return View(flight);
         }
 
-        // POST: Flights/Delete/5
+        // POST: Flights/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)

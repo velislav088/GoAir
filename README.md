@@ -1,6 +1,7 @@
 # GoAir - ASP.NET Fundamentals Project Assignment
 
 GoAir is a simple airline management web application built with the idea to simulate how an airline might manage its flights, aircraft, and airports.
+
 The idea is to simplify the complexity of a real-world airline system and try to reduce it to simple core features that can be scaled up in the future.
 
 ## Main features
@@ -20,13 +21,14 @@ The idea is to simplify the complexity of a real-world airline system and try to
 ### Prerequisites
 
 - .NET 10 SDK
-- Git (to clone the repo)
+- SQL Server LocalDB
+- Git
 
 ### 1. Clone the repository
 
 ```bash
 git clone https://github.com/velislav088/GoAir.git
-cd GoAir
+cd GoAir/GoAir
 ```
 ### 2. Restore and build
 ```
@@ -36,15 +38,16 @@ dotnet build
 
 ### 3. Build the database
 ```
+dotnet tool install --global dotnet-ef
 dotnet ef database update
 ```
-
+> Installing the Entity Framwork CLI may not be neccessary, but it fixes any errors if the database doesn't migrate properly.
 ### 4. Run the app
 ```
 dotnet run
 ```
 
-### 5. Open a browser and navigate to `https://localhost:7294`
+### 5. Open a browser and navigate to `http://localhost:5147`
 
 ### 6. Try out the features
 > Flights need an Aircraft and an Airport to be created first, so start by creating some airports and aircrafts before creating flights.

@@ -1,9 +1,10 @@
-﻿using GoAir.Data;
-using GoAir.Models;
-using GoAir.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
+using GoAir.Data;
+using GoAir.Models;
+using GoAir.ViewModels;
 
 namespace GoAir.Controllers
 {
@@ -22,18 +23,14 @@ namespace GoAir.Controllers
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var flight = await _context.Flights
                 .Include(f => f.ArrivalAirport)
                 .Include(f => f.DepartureAirport)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (flight == null)
-            {
                 return NotFound();
-            }
 
             return View(flight);
         }
@@ -68,9 +65,9 @@ namespace GoAir.Controllers
 
                 _context.Add(flight);
                 await _context.SaveChangesAsync();
-
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["ArrivalAirportId"] = new SelectList(_context.Airports, "Id", "City", model.ArrivalAirportId);
             ViewData["DepartureAirportId"] = new SelectList(_context.Airports, "Id", "City", model.DepartureAirportId);
             ViewData["AircraftId"] = new SelectList(_context.Aircrafts, "Id", "Model", model.AircraftId);
@@ -131,17 +128,12 @@ namespace GoAir.Controllers
                 flight.AircraftId = model.AircraftId;
 
                 await _context.SaveChangesAsync();
-
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["ArrivalAirportId"] =
-                new SelectList(_context.Airports, "Id", "City", model.ArrivalAirportId);
-
-            ViewData["DepartureAirportId"] =
-                new SelectList(_context.Airports, "Id", "City", model.DepartureAirportId);
+            ViewData["ArrivalAirportId"] = new SelectList(_context.Airports, "Id", "City", model.ArrivalAirportId);
+            ViewData["DepartureAirportId"] = new SelectList(_context.Airports, "Id", "City", model.DepartureAirportId);
             ViewData["AircraftId"] = new SelectList(_context.Aircrafts, "Id", "Model", model.AircraftId);
-
             return View(model);
         }
 
@@ -150,18 +142,14 @@ namespace GoAir.Controllers
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var flight = await _context.Flights
                 .Include(f => f.ArrivalAirport)
                 .Include(f => f.DepartureAirport)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (flight == null)
-            {
                 return NotFound();
-            }
 
             return View(flight);
         }
@@ -175,9 +163,9 @@ namespace GoAir.Controllers
             if (flight != null)
             {
                 _context.Flights.Remove(flight);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

@@ -5,7 +5,7 @@ using static GoAir.Common.EntityValidation.Flight;
 
 namespace GoAir.ViewModels
 {
-    public class CreateFlightViewModel
+    public class CreateFlightViewModel : IValidatableObject
     {
         [Required]
         public string FlightNumber { get; set; } = null!;
@@ -27,6 +27,21 @@ namespace GoAir.ViewModels
         [Required]
         public Guid AircraftId { get; set; }
 
-    }
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (DepartureAirportId == ArrivalAirportId)
+            {
+                yield return new ValidationResult(
+                    "Departure and arrival airports cannot be the same.",
+                    [nameof(DepartureAirportId), nameof(ArrivalAirportId)]);
+            }
 
+            if (DepartureTime <= DateTime.Now)
+            {
+                yield return new ValidationResult(
+                    "Departure must be in the future.",
+                    [nameof(DepartureTime)]);
+            }
+        }
+    }
 }

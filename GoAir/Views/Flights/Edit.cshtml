@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -62,4 +62,45 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        (function () {
+            const form = document.querySelector('form[asp-action="Edit"], form[action$="/Flights/Edit"]');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                const depMsg = document.querySelector('[data-valmsg-for="DepartureAirportId"]');
+                const arrMsg = document.querySelector('[data-valmsg-for="ArrivalAirportId"]');
+                const timeMsg = document.querySelector('[data-valmsg-for="DepartureTime"]');
+                if (depMsg) depMsg.textContent = '';
+                if (arrMsg) arrMsg.textContent = '';
+                if (timeMsg) timeMsg.textContent = '';
+
+                const dep = document.querySelector('[name="DepartureAirportId"]')?.value;
+                const arr = document.querySelector('[name="ArrivalAirportId"]')?.value;
+                const dt = document.querySelector('[name="DepartureTime"]')?.value;
+
+                let hasError = false;
+
+                if (dep && arr && dep === arr) {
+                    if (depMsg) depMsg.textContent = 'Departure and arrival airports must be different.';
+                    if (arrMsg) arrMsg.textContent = 'Departure and arrival airports must be different.';
+                    hasError = true;
+                }
+
+                if (dt) {
+                    const picked = new Date(dt);
+                    const now = new Date();
+                    if (isNaN(picked.getTime()) || picked <= now) {
+                        if (timeMsg) timeMsg.textContent = 'Departure time must be in the future.';
+                        hasError = true;
+                    }
+                }
+
+                if (hasError) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+        })();
+    </script>
 }

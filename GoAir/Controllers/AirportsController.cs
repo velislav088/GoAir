@@ -11,34 +11,25 @@ namespace GoAir.Controllers
         private readonly ApplicationDbContext _context = context;
 
         // GET: Airports
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Airports.ToListAsync());
-        }
+        public async Task<IActionResult> Index() => View(await _context.Airports.ToListAsync());
 
         // GET: Airports/Details
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var airport = await _context.Airports
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (airport == null)
-            {
                 return NotFound();
-            }
 
             return View(airport);
         }
 
         // GET: Airports/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         // POST: Airports/Create
         [HttpPost]
@@ -52,6 +43,7 @@ namespace GoAir.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(airport);
         }
 
@@ -59,15 +51,13 @@ namespace GoAir.Controllers
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var airport = await _context.Airports.FindAsync(id);
+
             if (airport == null)
-            {
                 return NotFound();
-            }
+
             return View(airport);
         }
 
@@ -77,9 +67,7 @@ namespace GoAir.Controllers
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,City,Terminals")] Airport airport)
         {
             if (id != airport.Id)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -101,6 +89,7 @@ namespace GoAir.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(airport);
         }
 
@@ -108,16 +97,13 @@ namespace GoAir.Controllers
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var airport = await _context.Airports
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (airport == null)
-            {
                 return NotFound();
-            }
 
             return View(airport);
         }
@@ -128,11 +114,18 @@ namespace GoAir.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var airport = await _context.Airports.FindAsync(id);
-            if (airport != null)
+
+            if (airport == null)
+                return NotFound();
+
+            var isUsed = await _context.Flights.AnyAsync(f => f.DepartureAirportId == id || f.ArrivalAirportId == id);
+            if (isUsed)
             {
-                _context.Airports.Remove(airport);
+                ModelState.AddModelError(string.Empty, "Cannot delete this airport because it is used by one or more flights.");
+                return View(airport);
             }
 
+            _context.Airports.Remove(airport);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

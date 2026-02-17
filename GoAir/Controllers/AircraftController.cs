@@ -11,34 +11,24 @@ namespace GoAir.Controllers
         private readonly ApplicationDbContext _context = context;
 
         // GET: Aircraft
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Aircrafts.ToListAsync());
-        }
+        public async Task<IActionResult> Index() => View(await _context.Aircrafts.ToListAsync());
 
         // GET: Aircraft/Details
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var aircraft = await _context.Aircrafts
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (aircraft == null)
-            {
                 return NotFound();
-            }
 
             return View(aircraft);
         }
 
         // GET: Aircraft/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         // POST: Aircraft/Create
         [HttpPost]
@@ -52,6 +42,7 @@ namespace GoAir.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(aircraft);
         }
 
@@ -59,15 +50,12 @@ namespace GoAir.Controllers
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var aircraft = await _context.Aircrafts.FindAsync(id);
             if (aircraft == null)
-            {
                 return NotFound();
-            }
+
             return View(aircraft);
         }
 
@@ -77,9 +65,7 @@ namespace GoAir.Controllers
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Model,Manufacturer,Capacity")] Aircraft aircraft)
         {
             if (id != aircraft.Id)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -91,16 +77,13 @@ namespace GoAir.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!AircraftExists(aircraft.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(aircraft);
         }
 
@@ -108,16 +91,12 @@ namespace GoAir.Controllers
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var aircraft = await _context.Aircrafts
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (aircraft == null)
-            {
                 return NotFound();
-            }
 
             return View(aircraft);
         }
@@ -128,18 +107,21 @@ namespace GoAir.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var aircraft = await _context.Aircrafts.FindAsync(id);
-            if (aircraft != null)
+            if (aircraft == null)
+                return NotFound();
+
+            var isUsed = await _context.Flights.AnyAsync(f => f.AircraftId == id);
+            if (isUsed)
             {
-                _context.Aircrafts.Remove(aircraft);
+                ModelState.AddModelError(string.Empty, "Cannot delete this aircraft because it is assigned to one or more flights.");
+                return View(aircraft);
             }
 
+            _context.Aircrafts.Remove(aircraft);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AircraftExists(Guid id)
-        {
-            return _context.Aircrafts.Any(e => e.Id == id);
-        }
+        private bool AircraftExists(Guid id) => _context.Aircrafts.Any(e => e.Id == id);
     }
 }

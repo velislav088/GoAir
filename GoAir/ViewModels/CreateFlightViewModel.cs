@@ -8,6 +8,7 @@ namespace GoAir.ViewModels
     public class CreateFlightViewModel : IValidatableObject
     {
         [Required]
+        [StringLength(FlightNumberMaxLength)]
         public string FlightNumber { get; set; } = null!;
 
         [Range(MinPrice, MaxPrice)]

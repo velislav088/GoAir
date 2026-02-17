@@ -10,6 +10,7 @@ namespace GoAir.ViewModels
         public Guid Id { get; set; }
 
         [Required]
+        [StringLength(FlightNumberMaxLength)]
         public string FlightNumber { get; set; } = null!;
 
         [Range(MinPrice, MaxPrice)]

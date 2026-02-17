@@ -11,22 +11,29 @@ namespace GoAir.ViewModels
 
         [Required]
         [StringLength(FlightNumberMaxLength)]
+        [Display(Name = "Flight Number")]
         public string FlightNumber { get; set; } = null!;
 
+        [Display(Name = "Price")]
         [Range(MinPrice, MaxPrice)]
         public decimal Price { get; set; }
 
+        [Display(Name = "Departure Time")]
         [Required]
         public DateTime DepartureTime { get; set; }
 
+        [Display(Name = "Status")]
         public FlightStatus Status { get; set; }
 
+        [Display(Name = "Departure Airport")]
         [Required]
         public Guid DepartureAirportId { get; set; }
 
+        [Display(Name = "Arrival Airport")]
         [Required]
         public Guid ArrivalAirportId { get; set; }
 
+        [Display(Name = "Aircraft")]
         [Required]
         public Guid AircraftId { get; set; }
 

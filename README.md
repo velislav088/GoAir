@@ -41,7 +41,7 @@ dotnet build
 dotnet tool install --global dotnet-ef
 dotnet ef database update
 ```
-> Installing the Entity Framwork CLI may not be neccessary, but it fixes any errors if the database doesn't migrate properly.
+> Installing the Entity Framework CLI may not be neccessary, but it fixes any errors if the database doesn't migrate properly.
 ### 4. Run the app
 ```
 dotnet run

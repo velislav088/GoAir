@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GoAir.Data.Models\GoAir.Data.Models.csproj" />
+    <ProjectReference Include="..\GoAir.GCommon\GoAir.GCommon.csproj" />
+    <ProjectReference Include="..\GoAir.Services.AutoMapping\GoAir.Services.AutoMapping.csproj" />
+  </ItemGroup>
+
+</Project>

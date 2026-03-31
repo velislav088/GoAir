@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-GoAir.Web-43fc014e-aaab-4ffa-b5aa-28ebf02721ff</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GoAir.Data\GoAir.Data.csproj" />
+    <ProjectReference Include="..\GoAir.GCommon\GoAir.GCommon.csproj" />
+    <ProjectReference Include="..\GoAir.Services.Core\GoAir.Services.Core.csproj" />
+    <ProjectReference Include="..\GoAir.Web.Infrastructure\GoAir.Web.Infrastructure.csproj" />
+    <ProjectReference Include="..\GoAir.Web.ViewModels\GoAir.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>

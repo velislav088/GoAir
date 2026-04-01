@@ -13,14 +13,14 @@ The idea is to simplify the complexity of a real-world airline system and try to
 ## Technologies
 
 - Frontend - Razor Views, Bootstrap, jQuery, JavaScript
-- Backend - ASP.NET Core MVC (.NET 10, C# 14)
+- Backend - ASP.NET Core MVC (.NET 8, C# 12)
 - Database - Entity Framework Core with SQL Server
 
 ## Getting started
 
 ### Prerequisites
 
-- .NET 10 SDK
+- .NET 8 SDK
 - SQL Server LocalDB
 - Git
 
@@ -28,7 +28,7 @@ The idea is to simplify the complexity of a real-world airline system and try to
 
 ```bash
 git clone https://github.com/velislav088/GoAir.git
-cd GoAir/GoAir
+cd GoAir
 ```
 ### 2. Restore and build
 ```
@@ -44,10 +44,11 @@ dotnet ef database update
 > Installing the Entity Framework CLI may not be neccessary, but it fixes any errors if the database doesn't migrate properly.
 ### 4. Run the app
 ```
+cd src/GoAir.Web
 dotnet run
 ```
 
-### 5. Open a browser and navigate to `http://localhost:5147`
+### 5. Open a browser and navigate to `http://localhost:5129`
 
 ### 6. Try out the features
 > Flights need an Aircraft and an Airport to be created first, so start by creating some airports and aircrafts before creating flights.

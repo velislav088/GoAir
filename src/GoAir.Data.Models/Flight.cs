@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+
+using GoAir.Data.Common;
 
 namespace GoAir.Data.Models
 {
@@ -7,27 +9,23 @@ namespace GoAir.Data.Models
         public Guid Id { get; set; }
 
         [Required]
+        [StringLength(EntityValidation.Flight.FlightNumberMaxLength, MinimumLength = EntityValidation.Flight.FlightNumberMinLength)]
         public string FlightNumber { get; set; } = null!;
 
-        [Required]
         public DateTime DepartureTime { get; set; }
 
-        [Required]
         public DateTime ArrivalTime { get; set; }
 
         public FlightStatus Status { get; set; }
 
-        [Required]
         public Guid DepartureAirportId { get; set; }
 
         public Airport DepartureAirport { get; set; } = null!;
 
-        [Required]
         public Guid ArrivalAirportId { get; set; }
 
         public Airport ArrivalAirport { get; set; } = null!;
 
-        [Required]
         public Guid AircraftId { get; set; }
 
         public Aircraft Aircraft { get; set; } = null!;

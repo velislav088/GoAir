@@ -5,31 +5,31 @@ VisualStudioVersion = 18.4.11620.152 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Data", "src\GoAir.Data\GoAir.Data.csproj", "{F7C9D892-EA7B-47F6-8474-012F17B64DCE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Data", "GoAir.Data\GoAir.Data.csproj", "{F7C9D892-EA7B-47F6-8474-012F17B64DCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Data.Common", "src\GoAir.Data.Common\GoAir.Data.Common.csproj", "{43019D1F-563E-43A8-8786-6090E51ADAC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Data.Common", "GoAir.Data.Common\GoAir.Data.Common.csproj", "{43019D1F-563E-43A8-8786-6090E51ADAC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Data.Models", "src\GoAir.Data.Models\GoAir.Data.Models.csproj", "{90DEA58E-FDA5-499F-827F-DE977D6AD632}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Data.Models", "GoAir.Data.Models\GoAir.Data.Models.csproj", "{90DEA58E-FDA5-499F-827F-DE977D6AD632}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.GCommon", "src\GoAir.GCommon\GoAir.GCommon.csproj", "{54B0B12E-EB12-4374-A2CE-E09ADD819D35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.GCommon", "GoAir.GCommon\GoAir.GCommon.csproj", "{54B0B12E-EB12-4374-A2CE-E09ADD819D35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.IntegrationTests", "src\GoAir.IntegrationTests\GoAir.IntegrationTests.csproj", "{2EAB351E-299B-434C-95D3-104D65B7E407}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.IntegrationTests", "GoAir.IntegrationTests\GoAir.IntegrationTests.csproj", "{2EAB351E-299B-434C-95D3-104D65B7E407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Services.Core", "src\GoAir.Services.Core\GoAir.Services.Core.csproj", "{8E5BE680-0573-4900-B124-5738DC26FF9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Services.Core", "GoAir.Services.Core\GoAir.Services.Core.csproj", "{8E5BE680-0573-4900-B124-5738DC26FF9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Services.AutoMapping", "src\GoAir.Services.AutoMapping\GoAir.Services.AutoMapping.csproj", "{88B1F93E-B6F7-4F50-A3B7-1238BB9B758E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Services.AutoMapping", "GoAir.Services.AutoMapping\GoAir.Services.AutoMapping.csproj", "{88B1F93E-B6F7-4F50-A3B7-1238BB9B758E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Services.Common", "src\GoAir.Services.Common\GoAir.Services.Common.csproj", "{8A183256-395F-4270-811E-A41C9CF3262F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Services.Common", "GoAir.Services.Common\GoAir.Services.Common.csproj", "{8A183256-395F-4270-811E-A41C9CF3262F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Web.ViewModels", "src\GoAir.Web.ViewModels\GoAir.Web.ViewModels.csproj", "{01C7434C-173E-4CBA-8ED1-AA433C781D0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Web.ViewModels", "GoAir.Web.ViewModels\GoAir.Web.ViewModels.csproj", "{01C7434C-173E-4CBA-8ED1-AA433C781D0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Services.Core.Tests", "src\GoAir.Services.Core.Tests\GoAir.Services.Core.Tests.csproj", "{D013BE0E-EBC7-4A62-AE6C-AEBF2966424E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Services.Core.Tests", "GoAir.Services.Core.Tests\GoAir.Services.Core.Tests.csproj", "{D013BE0E-EBC7-4A62-AE6C-AEBF2966424E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Web", "src\GoAir.Web\GoAir.Web.csproj", "{F74F92D6-2908-4029-AE8B-FCCA7100545F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Web", "GoAir.Web\GoAir.Web.csproj", "{F74F92D6-2908-4029-AE8B-FCCA7100545F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Web.Infrastructure", "src\GoAir.Web.Infrastructure\GoAir.Web.Infrastructure.csproj", "{DCFA7141-2703-4610-BFB1-4FBA9B047E91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Web.Infrastructure", "GoAir.Web.Infrastructure\GoAir.Web.Infrastructure.csproj", "{DCFA7141-2703-4610-BFB1-4FBA9B047E91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Web.Tests", "src\GoAir.Web.Tests\GoAir.Web.Tests.csproj", "{E3C9A286-7C69-4225-BAA1-8ED3ACC1DA63}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoAir.Web.Tests", "GoAir.Web.Tests\GoAir.Web.Tests.csproj", "{E3C9A286-7C69-4225-BAA1-8ED3ACC1DA63}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{01118890-4C0B-442A-BA74-6FB127DA671A}"
 EndProject

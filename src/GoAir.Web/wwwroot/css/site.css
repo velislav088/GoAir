@@ -19,4 +19,148 @@ html {
 
 body {
   margin-bottom: 60px;
+  background:
+    radial-gradient(circle at top left, rgba(0, 153, 255, 0.16), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(0, 82, 204, 0.16), transparent 32%),
+    linear-gradient(180deg, #f4f8fc 0%, #eaf1f8 100%);
+}
+
+.error-page {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  min-height: calc(100vh - 210px);
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #0d1b2a 0%, #12385d 52%, #1d5d8f 100%);
+  box-shadow: 0 28px 60px rgba(7, 27, 49, 0.18);
+  color: #f8fbff;
+}
+
+.error-page::before,
+.error-page::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  opacity: 0.24;
+}
+
+.error-page::before {
+  top: -80px;
+  right: -60px;
+  width: 220px;
+  height: 220px;
+  background: #6fd3ff;
+}
+
+.error-page::after {
+  bottom: -90px;
+  left: -50px;
+  width: 240px;
+  height: 240px;
+  background: #ffc857;
+}
+
+.error-page__content {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+}
+
+.error-page__eyebrow {
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.24rem;
+  text-transform: uppercase;
+  color: rgba(248, 251, 255, 0.75);
+}
+
+.error-page__code {
+  margin: 0;
+  font-size: clamp(4.5rem, 12vw, 8rem);
+  line-height: 0.9;
+  font-weight: 800;
+}
+
+.error-page__title {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+}
+
+.error-page__description {
+  margin-bottom: 1.75rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(248, 251, 255, 0.86);
+}
+
+.error-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.error-page__button {
+  padding: 0.85rem 1.35rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.error-page .btn-primary {
+  background-color: #ffc857;
+  border-color: #ffc857;
+  color: #11243a;
+}
+
+.error-page .btn-primary:hover,
+.error-page .btn-primary:focus {
+  background-color: #ffd57f;
+  border-color: #ffd57f;
+  color: #11243a;
+}
+
+.error-page .btn-outline-light:hover,
+.error-page .btn-outline-light:focus {
+  color: #11243a;
+}
+
+.error-page__request-id {
+  margin-top: 1.5rem;
+  color: rgba(248, 251, 255, 0.7);
+}
+
+.error-page__request-id code {
+  color: #fff4cf;
+}
+
+.error-page-not-found {
+  background: linear-gradient(135deg, #0c2237 0%, #12436c 50%, #1a759f 100%);
+}
+
+.error-page-server {
+  background: linear-gradient(135deg, #2b0f18 0%, #5f1b2d 52%, #8c2f39 100%);
+}
+
+@media (max-width: 767.98px) {
+  body {
+    margin-bottom: 40px;
+  }
+
+  .error-page {
+    min-height: auto;
+    padding: 2rem 1.5rem;
+    border-radius: 22px;
+  }
+
+  .error-page__actions {
+    flex-direction: column;
+  }
+
+  .error-page__button {
+    width: 100%;
+  }
 }

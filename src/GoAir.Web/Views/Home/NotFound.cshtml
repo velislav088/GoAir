@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "404 Not Found";
+}
+
+<section class="error-page error-page-not-found">
+    <div class="error-page__content">
+        <p class="error-page__eyebrow">GoAir Navigation</p>
+        <h1 class="error-page__code">404</h1>
+        <h2 class="error-page__title">This page never made it to the gate.</h2>
+        <p class="error-page__description">
+            The address you entered does not point to an active page. Check the URL or use one of the links below.
+        </p>
+
+        <div class="error-page__actions">
+            <a class="btn btn-primary error-page__button" asp-controller="Home" asp-action="Index">Go to Homepage</a>
+            <a class="btn btn-outline-light error-page__button" asp-controller="Home" asp-action="Privacy">Privacy Page</a>
+        </div>
+    </div>
+</section>

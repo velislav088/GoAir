@@ -2,6 +2,8 @@ namespace GoAir.Web
 {
     using Data;
     using Data.Models;
+    using GoAir.Services.Core.Contracts;
+    using GoAir.Services.Core.Services;
 
     using Microsoft.EntityFrameworkCore;
 
@@ -25,14 +27,18 @@ namespace GoAir.Web
                     options.SignIn.RequireConfirmedAccount = false;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddScoped<ILookupService, LookupService>();
+            builder.Services.AddScoped<IAircraftService, AircraftService>();
+            builder.Services.AddScoped<IAirportService, AirportService>();
+            builder.Services.AddScoped<IFlightService, FlightService>();
+            builder.Services.AddScoped<ITicketService, TicketService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
             builder.Services.AddControllersWithViews();
 
             WebApplication? app = builder.Build();
             
             if (app.Environment.IsDevelopment())
-            {
                 app.UseMigrationsEndPoint();
-            }
             else
             {
                 app.UseExceptionHandler("/Home/Error");

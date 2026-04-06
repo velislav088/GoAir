@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GoAir.Data.Models\GoAir.Data.Models.csproj" />
     <ProjectReference Include="..\GoAir.GCommon\GoAir.GCommon.csproj" />
     <ProjectReference Include="..\GoAir.Services.AutoMapping\GoAir.Services.AutoMapping.csproj" />

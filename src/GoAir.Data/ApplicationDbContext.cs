@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GoAir.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
+
         public DbSet<Aircraft> Aircraft { get; set; } = null!;
 
         public DbSet<Airport> Airports { get; set; } = null!;
@@ -65,6 +67,12 @@ namespace GoAir.Data
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity
+                    .HasOne(t => t.User)
+                    .WithMany(u => u.Tickets)
+                    .HasForeignKey(t => t.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity
                     .HasIndex(t => new { t.FlightId, t.SeatNumber })
                     .IsUnique();
             });
@@ -76,6 +84,12 @@ namespace GoAir.Data
                     .WithMany(f => f.Reviews)
                     .HasForeignKey(r => r.FlightId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                entity
+                    .HasOne(r => r.User)
+                    .WithMany(u => u.Reviews)
+                    .HasForeignKey(r => r.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }

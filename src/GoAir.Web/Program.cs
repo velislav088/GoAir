@@ -1,8 +1,8 @@
 namespace GoAir.Web
 {
     using Data;
+    using Data.Models;
 
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     public class Program
@@ -20,9 +20,9 @@ namespace GoAir.Web
                 });
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services
-                .AddDefaultIdentity<IdentityUser>(options =>
+                .AddDefaultIdentity<ApplicationUser>(options =>
                 {
-                    options.SignIn.RequireConfirmedAccount = true;
+                    options.SignIn.RequireConfirmedAccount = false;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();

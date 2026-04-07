@@ -10,25 +10,52 @@ namespace GoAir.Services.Core.Services
 
     public class AirportService(ApplicationDbContext context) : IAirportService
     {
-        public async Task<IEnumerable<AirportViewModel>> GetAllAsync()
+        public async Task<AirportIndexViewModel> GetAllAsync(string? searchTerm, int page, bool isAdmin)
         {
-            return await context.Airports
-                .AsNoTracking()
-                .Select(a => new AirportViewModel
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    IATACode = a.IATACode,
-                    City = a.City,
-                })
-                .ToListAsync();
+            const int PageSize = 6;
+            IQueryable<Airport> query = context.Airports
+            .AsNoTracking()
+            .AsQueryable();
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string normalizedSearch = searchTerm.Trim();
+                query = query.Where(a =>
+                a.Name.Contains(normalizedSearch) ||
+                a.City.Contains(normalizedSearch) ||
+                a.IATACode.Contains(normalizedSearch));
+            }
+            query = query
+            .OrderBy(a => a.City)
+            .ThenBy(a => a.Name);
+            int totalAirports = await query.CountAsync();
+            int totalPages = Math.Max(1, (int)Math.Ceiling(totalAirports / (double)PageSize));
+            int currentPage = Math.Clamp(page, 1, totalPages);
+            List<AirportViewModel> airports = await query
+            .Skip((currentPage - 1) * PageSize)
+            .Take(PageSize)
+            .Select(a => new AirportViewModel
+            {
+                Id = a.Id,
+                Name = a.Name,
+                IATACode = a.IATACode,
+                City = a.City,
+            })
+            .ToListAsync();
+            return new AirportIndexViewModel
+            {
+                SearchTerm = searchTerm?.Trim() ?? string.Empty,
+                CurrentPage = currentPage,
+                TotalPages = totalPages,
+                IsAdmin = isAdmin,
+                Airports = airports,
+            };
         }
 
         public async Task<AirportViewModel?> GetByIdAsync(Guid id)
         {
             Airport? airport = await context.Airports
-                .AsNoTracking()
-                .FirstOrDefaultAsync(a => a.Id == id);
+            .AsNoTracking()
+            .FirstOrDefaultAsync(a => a.Id == id);
 
             return airport == null ? null : Map(airport);
         }
@@ -37,7 +64,7 @@ namespace GoAir.Services.Core.Services
         {
             ServiceResult validation = await ValidateAsync(model);
             if (!validation.Succeeded)
-                return validation;
+            return validation;
 
             Airport airport = new()
             {
@@ -62,11 +89,11 @@ namespace GoAir.Services.Core.Services
         {
             bool exists = await context.Airports.AnyAsync(a => a.Id == model.Id);
             if (!exists)
-                return ServiceResult.Missing();
+            return ServiceResult.Missing();
 
             ServiceResult validation = await ValidateAsync(model);
             if (!validation.Succeeded)
-                return validation;
+            return validation;
 
             Airport airport = new()
             {
@@ -85,11 +112,11 @@ namespace GoAir.Services.Core.Services
         {
             Airport? airport = await context.Airports.FindAsync(id);
             if (airport == null)
-                return ServiceResult.Missing();
+            return ServiceResult.Missing();
 
             bool hasFlights = await context.Flights.AnyAsync(f => f.DepartureAirportId == id || f.ArrivalAirportId == id);
             if (hasFlights)
-                return ServiceResult.Failure(string.Empty, "Airport cannot be deleted while it is used by flights.");
+            return ServiceResult.Failure(string.Empty, "Airport cannot be deleted while it is used by flights.");
 
             context.Airports.Remove(airport);
             await context.SaveChangesAsync();
@@ -101,19 +128,19 @@ namespace GoAir.Services.Core.Services
             ServiceResult result = ServiceResult.Success();
 
             if (string.IsNullOrWhiteSpace(model.Name))
-                result.AddError(nameof(model.Name), "Airport name is required.");
+            result.AddError(nameof(model.Name), "Airport name is required.");
 
             if (string.IsNullOrWhiteSpace(model.City))
-                result.AddError(nameof(model.City), "Airport city is required.");
+            result.AddError(nameof(model.City), "Airport city is required.");
 
             string normalizedCode = model.IATACode.Trim().ToUpperInvariant();
             if (normalizedCode.Length != 3)
-                result.AddError(nameof(model.IATACode), "IATA code must be exactly 3 characters.");
+            result.AddError(nameof(model.IATACode), "IATA code must be exactly 3 characters.");
             else
             {
                 bool duplicateCode = await context.Airports.AnyAsync(a => a.IATACode == normalizedCode && a.Id != model.Id);
                 if (duplicateCode)
-                    result.AddError(nameof(model.IATACode), "This IATA code is already in use.");
+                result.AddError(nameof(model.IATACode), "This IATA code is already in use.");
             }
 
             model.IATACode = normalizedCode;

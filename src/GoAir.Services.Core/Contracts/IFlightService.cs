@@ -5,7 +5,7 @@ namespace GoAir.Services.Core.Contracts
 
     public interface IFlightService
     {
-        Task<IEnumerable<FlightViewModel>> GetAllAsync();
+        Task<FlightIndexViewModel> GetAllAsync(string? searchTerm, string? sortOrder, int page, bool isAdmin);
 
         Task<FlightViewModel?> GetByIdAsync(Guid id);
 

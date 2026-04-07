@@ -1,33 +1,60 @@
 namespace GoAir.Services.Core.Services
 {
-    using Data;
-    using Data.Models;
     using Common;
     using Contracts;
+    using Data;
+    using Data.Models;
     using Web.ViewModels.Aircraft;
 
     using Microsoft.EntityFrameworkCore;
+
     public class AircraftService(ApplicationDbContext context) : IAircraftService
     {
-        public async Task<IEnumerable<AircraftViewModel>> GetAllAsync()
+        public async Task<AircraftIndexViewModel> GetAllAsync(string? searchTerm, int page, bool isAdmin)
         {
-            return await context.Aircraft
-                .AsNoTracking()
-                .Select(a => new AircraftViewModel
-                {
-                    Id = a.Id,
-                    Model = a.Model,
-                    Manufacturer = a.Manufacturer,
-                    Capacity = a.Capacity,
-                })
-                .ToListAsync();
+            const int PageSize = 6;
+            IQueryable<Aircraft> query = context.Aircraft
+            .AsNoTracking()
+            .AsQueryable();
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string normalizedSearch = searchTerm.Trim();
+                query = query.Where(a =>
+                a.Manufacturer.Contains(normalizedSearch) ||
+                a.Model.Contains(normalizedSearch));
+            }
+            query = query
+            .OrderBy(a => a.Manufacturer)
+            .ThenBy(a => a.Model);
+            int totalAircraft = await query.CountAsync();
+            int totalPages = Math.Max(1, (int)Math.Ceiling(totalAircraft / (double)PageSize));
+            int currentPage = Math.Clamp(page, 1, totalPages);
+            List<AircraftViewModel> aircraft = await query
+            .Skip((currentPage - 1) * PageSize)
+            .Take(PageSize)
+            .Select(a => new AircraftViewModel
+            {
+                Id = a.Id,
+                Model = a.Model,
+                Manufacturer = a.Manufacturer,
+                Capacity = a.Capacity,
+            })
+            .ToListAsync();
+            return new AircraftIndexViewModel
+            {
+                SearchTerm = searchTerm?.Trim() ?? string.Empty,
+                CurrentPage = currentPage,
+                TotalPages = totalPages,
+                IsAdmin = isAdmin,
+                Aircraft = aircraft,
+            };
         }
 
         public async Task<AircraftViewModel?> GetByIdAsync(Guid id)
         {
             Aircraft? aircraft = await context.Aircraft
-                .AsNoTracking()
-                .FirstOrDefaultAsync(a => a.Id == id);
+            .AsNoTracking()
+            .FirstOrDefaultAsync(a => a.Id == id);
 
             return aircraft == null ? null : Map(aircraft);
         }

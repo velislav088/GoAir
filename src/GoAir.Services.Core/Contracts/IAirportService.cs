@@ -5,7 +5,7 @@ namespace GoAir.Services.Core.Contracts
 
     public interface IAirportService
     {
-        Task<IEnumerable<AirportViewModel>> GetAllAsync();
+        Task<AirportIndexViewModel> GetAllAsync(string? searchTerm, int page, bool isAdmin);
 
         Task<AirportViewModel?> GetByIdAsync(Guid id);
 

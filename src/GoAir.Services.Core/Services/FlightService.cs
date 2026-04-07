@@ -9,25 +9,57 @@ namespace GoAir.Services.Core.Services
     using Microsoft.EntityFrameworkCore;
     public class FlightService(ApplicationDbContext context, ILookupService lookupService) : IFlightService
     {
-        public async Task<IEnumerable<FlightViewModel>> GetAllAsync()
+        public async Task<FlightIndexViewModel> GetAllAsync(string? searchTerm, string? sortOrder, int page, bool isAdmin)
         {
-            return await context.Flights
-                .AsNoTracking()
-                .Include(f => f.Aircraft)
-                .Include(f => f.ArrivalAirport)
-                .Include(f => f.DepartureAirport)
-                .Select(f => new FlightViewModel
-                {
-                    Id = f.Id,
-                    FlightNumber = f.FlightNumber,
-                    DepartureTime = f.DepartureTime,
-                    ArrivalTime = f.ArrivalTime,
-                    Status = f.Status.ToString(),
-                    DepartureAirport = f.DepartureAirport.City,
-                    ArrivalAirport = f.ArrivalAirport.City,
-                    Aircraft = $"{f.Aircraft.Manufacturer} {f.Aircraft.Model}",
-                })
-                .ToListAsync();
+            const int PageSize = 6;
+            IQueryable<Flight> query = context.Flights
+            .AsNoTracking()
+            .Include(f => f.Aircraft)
+            .Include(f => f.ArrivalAirport)
+            .Include(f => f.DepartureAirport);
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string normalizedSearch = searchTerm.Trim();
+                query = query.Where(f =>
+                f.FlightNumber.Contains(normalizedSearch) ||
+                f.DepartureAirport.City.Contains(normalizedSearch) ||
+                f.ArrivalAirport.City.Contains(normalizedSearch) ||
+                f.Aircraft.Manufacturer.Contains(normalizedSearch) ||
+                f.Aircraft.Model.Contains(normalizedSearch));
+            }
+            query = sortOrder switch
+            {
+                FlightSorting.FlightNumber => query.OrderBy(f => f.FlightNumber),
+                FlightSorting.ArrivalCity => query.OrderBy(f => f.ArrivalAirport.City).ThenBy(f => f.DepartureTime),
+                _ => query.OrderBy(f => f.DepartureTime),
+            };
+            int totalFlights = await query.CountAsync();
+            int totalPages = Math.Max(1, (int)Math.Ceiling(totalFlights / (double)PageSize));
+            int currentPage = Math.Clamp(page, 1, totalPages);
+            List<FlightViewModel> flights = await query
+            .Skip((currentPage - 1) * PageSize)
+            .Take(PageSize)
+            .Select(f => new FlightViewModel
+            {
+                Id = f.Id,
+                FlightNumber = f.FlightNumber,
+                DepartureTime = f.DepartureTime,
+                ArrivalTime = f.ArrivalTime,
+                Status = f.Status.ToString(),
+                DepartureAirport = $"{f.DepartureAirport.City} ({f.DepartureAirport.IATACode})",
+                ArrivalAirport = $"{f.ArrivalAirport.City} ({f.ArrivalAirport.IATACode})",
+                Aircraft = $"{f.Aircraft.Manufacturer} {f.Aircraft.Model}",
+            })
+            .ToListAsync();
+            return new FlightIndexViewModel
+            {
+                SearchTerm = searchTerm?.Trim() ?? string.Empty,
+                SortOrder = string.IsNullOrWhiteSpace(sortOrder) ? FlightSorting.DepartureSoonest : sortOrder,
+                CurrentPage = currentPage,
+                TotalPages = totalPages,
+                IsAdmin = isAdmin,
+                Flights = flights,
+            };
         }
 
         public async Task<FlightViewModel?> GetByIdAsync(Guid id)
@@ -55,7 +87,7 @@ namespace GoAir.Services.Core.Services
         {
             ServiceResult validation = await ValidateAsync(model);
             if (!validation.Succeeded)
-                return validation;
+            return validation;
 
             Flight flight = new()
             {
@@ -78,7 +110,7 @@ namespace GoAir.Services.Core.Services
         {
             Flight? flight = await context.Flights.FindAsync(id);
             if (flight == null)
-                return null;
+            return null;
 
             FlightFormViewModel model = new()
             {
@@ -100,11 +132,11 @@ namespace GoAir.Services.Core.Services
         {
             bool exists = await context.Flights.AnyAsync(f => f.Id == model.Id);
             if (!exists)
-                return ServiceResult.Missing();
+            return ServiceResult.Missing();
 
             ServiceResult validation = await ValidateAsync(model);
             if (!validation.Succeeded)
-                return validation;
+            return validation;
 
             Flight flight = new()
             {
@@ -132,12 +164,12 @@ namespace GoAir.Services.Core.Services
         {
             Flight? flight = await context.Flights.FindAsync(id);
             if (flight == null)
-                return ServiceResult.Missing();
+            return ServiceResult.Missing();
 
             bool hasTickets = await context.Tickets.AnyAsync(t => t.FlightId == id);
             bool hasReviews = await context.Reviews.AnyAsync(r => r.FlightId == id);
             if (hasTickets || hasReviews)
-                return ServiceResult.Failure(string.Empty, "Flight cannot be deleted while tickets or reviews exist for it.");
+            return ServiceResult.Failure(string.Empty, "Flight cannot be deleted while tickets or reviews exist for it.");
 
             context.Flights.Remove(flight);
             await context.SaveChangesAsync();
@@ -155,11 +187,11 @@ namespace GoAir.Services.Core.Services
         private async Task<Flight?> GetFlightEntityByIdAsync(Guid id)
         {
             return await context.Flights
-                .AsNoTracking()
-                .Include(f => f.Aircraft)
-                .Include(f => f.ArrivalAirport)
-                .Include(f => f.DepartureAirport)
-                .FirstOrDefaultAsync(f => f.Id == id);
+            .AsNoTracking()
+            .Include(f => f.Aircraft)
+            .Include(f => f.ArrivalAirport)
+            .Include(f => f.DepartureAirport)
+            .FirstOrDefaultAsync(f => f.Id == id);
         }
 
         private async Task<ServiceResult> ValidateAsync(FlightFormViewModel model)
@@ -167,7 +199,7 @@ namespace GoAir.Services.Core.Services
             ServiceResult result = ServiceResult.Success();
 
             if (string.IsNullOrWhiteSpace(model.FlightNumber))
-                result.AddError(nameof(model.FlightNumber), "Flight number is required.");
+            result.AddError(nameof(model.FlightNumber), "Flight number is required.");
             else
             {
                 model.FlightNumber = model.FlightNumber.Trim().ToUpperInvariant();
@@ -180,31 +212,31 @@ namespace GoAir.Services.Core.Services
             }
 
             if (model.DepartureAirportId == Guid.Empty || !await context.Airports.AnyAsync(a => a.Id == model.DepartureAirportId))
-                result.AddError(nameof(model.DepartureAirportId), "A valid departure airport is required.");
+            result.AddError(nameof(model.DepartureAirportId), "A valid departure airport is required.");
 
             if (model.ArrivalAirportId == Guid.Empty || !await context.Airports.AnyAsync(a => a.Id == model.ArrivalAirportId))
-                result.AddError(nameof(model.ArrivalAirportId), "A valid arrival airport is required.");
+            result.AddError(nameof(model.ArrivalAirportId), "A valid arrival airport is required.");
 
             if (model.DepartureAirportId != Guid.Empty && model.DepartureAirportId == model.ArrivalAirportId)
-                result.AddError(nameof(model.ArrivalAirportId), "Arrival airport must be different from departure airport.");
+            result.AddError(nameof(model.ArrivalAirportId), "Arrival airport must be different from departure airport.");
 
             if (model.AircraftId == Guid.Empty || !await context.Aircraft.AnyAsync(a => a.Id == model.AircraftId))
-                result.AddError(nameof(model.AircraftId), "A valid aircraft is required.");
+            result.AddError(nameof(model.AircraftId), "A valid aircraft is required.");
             else
             {
                 bool overlappingAircraftFlight = await context.Flights.AnyAsync(f =>
-                    f.AircraftId == model.AircraftId &&
-                    f.Id != model.Id &&
-                    f.Status != FlightStatus.Cancelled &&
-                    model.DepartureTime < f.ArrivalTime &&
-                    model.ArrivalTime > f.DepartureTime);
+                f.AircraftId == model.AircraftId &&
+                f.Id != model.Id &&
+                f.Status != FlightStatus.Cancelled &&
+                model.DepartureTime < f.ArrivalTime &&
+                model.ArrivalTime > f.DepartureTime);
 
                 if (overlappingAircraftFlight)
-                    result.AddError(nameof(model.AircraftId), "This aircraft is already assigned to another flight in the selected time range.");
+                result.AddError(nameof(model.AircraftId), "This aircraft is already assigned to another flight in the selected time range.");
             }
 
             if (model.ArrivalTime <= model.DepartureTime)
-                result.AddError(nameof(model.ArrivalTime), "Arrival time must be after departure time.");
+            result.AddError(nameof(model.ArrivalTime), "Arrival time must be after departure time.");
 
             return result;
         }

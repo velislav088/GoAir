@@ -5,21 +5,21 @@ namespace GoAir.Services.Core.Contracts
 
     public interface ITicketService
     {
-        Task<IEnumerable<TicketViewModel>> GetAllAsync();
+        Task<TicketIndexViewModel> GetAllAsync(string userId, bool isAdmin, string? searchTerm, int page);
 
-        Task<TicketViewModel?> GetByIdAsync(Guid id);
+        Task<TicketViewModel?> GetByIdAsync(Guid id, string userId, bool isAdmin);
 
         Task<TicketFormViewModel> GetCreateModelAsync();
 
-        Task<ServiceResult> CreateAsync(TicketFormViewModel model);
+        Task<ServiceResult> CreateAsync(TicketFormViewModel model, string userId);
 
-        Task<TicketFormViewModel?> GetForEditAsync(Guid id);
+        Task<TicketFormViewModel?> GetForEditAsync(Guid id, string userId, bool isAdmin);
 
-        Task<ServiceResult> UpdateAsync(TicketFormViewModel model);
+        Task<ServiceResult> UpdateAsync(TicketFormViewModel model, string userId, bool isAdmin);
 
-        Task<TicketViewModel?> GetForDeleteAsync(Guid id);
+        Task<TicketViewModel?> GetForDeleteAsync(Guid id, string userId, bool isAdmin);
 
-        Task<ServiceResult> DeleteAsync(Guid id);
+        Task<ServiceResult> DeleteAsync(Guid id, string userId, bool isAdmin);
 
         Task PopulateFormOptionsAsync(TicketFormViewModel model);
     }

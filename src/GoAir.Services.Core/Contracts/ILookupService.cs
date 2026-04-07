@@ -11,5 +11,6 @@ namespace GoAir.Services.Core.Contracts
         Task<IEnumerable<LookupOptionViewModel>> GetFlightOptionsAsync();
 
         Task<IEnumerable<LookupOptionViewModel>> GetUserOptionsAsync();
+
     }
 }

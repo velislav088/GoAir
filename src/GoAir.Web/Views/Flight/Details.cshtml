@@ -1,32 +1,78 @@
 @model FlightViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Flight Details";
 }
 
-<h1>Details</h1>
+<section class="content-card">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="section-title mb-1">@Model.FlightNumber</h1>
+            <p class="section-subtitle mb-0">Review the schedule, route, aircraft assignment, and recent passenger feedback.</p>
+        </div>
+        <a class="btn btn-outline-secondary" asp-action="Index">Back to Flights</a>
+    </div>
 
-<div>
-    <h4>Flight</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.FlightNumber)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.FlightNumber)</dd>
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DepartureTime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DepartureTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.ArrivalTime)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ArrivalTime)</dd>
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Status)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Status)</dd>
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DepartureAirport)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DepartureAirport)</dd>
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.ArrivalAirport)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ArrivalAirport)</dd>
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Aircraft)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Aircraft)</dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <article class="content-card h-100">
+                <h2 class="section-title h4">Schedule</h2>
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">Departure</dt>
+                    <dd class="col-sm-7">@Model.DepartureTime.ToString("f")</dd>
+                    <dt class="col-sm-5">Arrival</dt>
+                    <dd class="col-sm-7">@Model.ArrivalTime.ToString("f")</dd>
+                    <dt class="col-sm-5">Status</dt>
+                    <dd class="col-sm-7">@Model.Status</dd>
+                </dl>
+            </article>
+        </div>
+        <div class="col-md-6">
+            <article class="content-card h-100">
+                <h2 class="section-title h4">Route</h2>
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">Departure Airport</dt>
+                    <dd class="col-sm-7">@Model.DepartureAirport</dd>
+                    <dt class="col-sm-5">Arrival Airport</dt>
+                    <dd class="col-sm-7">@Model.ArrivalAirport</dd>
+                    <dt class="col-sm-5">Aircraft</dt>
+                    <dd class="col-sm-7">@Model.Aircraft</dd>
+                </dl>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="content-card mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="section-title h4 mb-0">Reviews</h2>
+        <span class="section-subtitle">Loaded asynchronously</span>
+    </div>
+    <div id="flight-reviews-container">
+        <p class="empty-state mb-0">Loading reviews...</p>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const container = document.getElementById("flight-reviews-container");
+
+            try {
+                const response = await fetch("@Url.Action("ReviewsPartial", "Flight", new { id = Model.Id })", {
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Request failed.");
+                }
+
+                container.innerHTML = await response.text();
+            } catch {
+                container.innerHTML = '<p class="empty-state mb-0">Reviews could not be loaded right now. Please try again later.</p>';
+            }
+        });
+    </script>
+}

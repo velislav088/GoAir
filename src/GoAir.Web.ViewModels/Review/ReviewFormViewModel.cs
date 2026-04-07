@@ -1,9 +1,9 @@
 namespace GoAir.Web.ViewModels.Review
 {
+    using System.ComponentModel.DataAnnotations;
+    
     using Data.Common;
     using Common;
-
-    using System.ComponentModel.DataAnnotations;
 
     public class ReviewFormViewModel
     {
@@ -20,15 +20,9 @@ namespace GoAir.Web.ViewModels.Review
 
         [Display(Name = "Created On")]
         [DataType(DataType.DateTime)]
-        public DateTime CreatedOn { get; set; }
-
-        [Display(Name = "User")]
-        public string UserId { get; set; } = string.Empty;
-
+        public DateTime? CreatedOn { get; set; }
         [Display(Name = "Flight")]
         public Guid FlightId { get; set; }
-
-        public IEnumerable<LookupOptionViewModel> Users { get; set; } = [];
 
         public IEnumerable<LookupOptionViewModel> Flights { get; set; } = [];
     }

@@ -1,68 +1,80 @@
 @model FlightFormViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Flight";
 }
 
-<h1>Create</h1>
+<section class="form-shell">
+    <div class="form-shell__header">
+        <div>
+            <p class="form-shell__eyebrow">Operations</p>
+            <h1 class="form-shell__title">Create Flight</h1>
+            <p class="form-shell__subtitle">Schedule a route with clearer fields, stronger hierarchy, and mobile-friendly actions.</p>
+        </div>
+        <a class="btn btn-outline-secondary btn-soft" asp-action="Index">Back to list</a>
+    </div>
 
-<h4>Flight</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FlightNumber" class="control-label"></label>
-                <input asp-for="FlightNumber" class="form-control" />
-                <span asp-validation-for="FlightNumber" class="text-danger"></span>
+    <section class="form-card">
+        <form asp-action="Create" class="app-form">
+            <div asp-validation-summary="ModelOnly" class="text-danger validation-summary"></div>
+
+            <div class="form-grid form-grid--two">
+                <div class="form-field">
+                    <label asp-for="FlightNumber" class="form-label"></label>
+                    <input asp-for="FlightNumber" class="form-control" placeholder="GA102" />
+                    <span asp-validation-for="FlightNumber" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Status" class="form-label"></label>
+                    <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<GoAir.Data.Models.FlightStatus>()"></select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="DepartureTime" class="form-label"></label>
+                    <input asp-for="DepartureTime" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="DepartureTime" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="ArrivalTime" class="form-label"></label>
+                    <input asp-for="ArrivalTime" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="ArrivalTime" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="DepartureAirportId" class="form-label"></label>
+                    <select asp-for="DepartureAirportId"
+                            class="form-select"
+                            asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.DepartureAirports, nameof(LookupOptionViewModel.Value), nameof(LookupOptionViewModel.Text)))"></select>
+                    <span asp-validation-for="DepartureAirportId" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="ArrivalAirportId" class="form-label"></label>
+                    <select asp-for="ArrivalAirportId"
+                            class="form-select"
+                            asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.ArrivalAirports, nameof(LookupOptionViewModel.Value), nameof(LookupOptionViewModel.Text)))"></select>
+                    <span asp-validation-for="ArrivalAirportId" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="DepartureTime" class="control-label"></label>
-                <input asp-for="DepartureTime" class="form-control" />
-                <span asp-validation-for="DepartureTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ArrivalTime" class="control-label"></label>
-                <input asp-for="ArrivalTime" class="form-control" />
-                <span asp-validation-for="ArrivalTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<GoAir.Data.Models.FlightStatus>()"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DepartureAirportId" class="control-label"></label>
-                <select asp-for="DepartureAirportId"
-                        class="form-control"
-                        asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.DepartureAirports, nameof(LookupOptionViewModel.Value), nameof(LookupOptionViewModel.Text)))"></select>
-                <span asp-validation-for="DepartureAirportId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ArrivalAirportId" class="control-label"></label>
-                <select asp-for="ArrivalAirportId"
-                        class="form-control"
-                        asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.ArrivalAirports, nameof(LookupOptionViewModel.Value), nameof(LookupOptionViewModel.Text)))"></select>
-                <span asp-validation-for="ArrivalAirportId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AircraftId" class="control-label"></label>
+
+            <div class="form-field">
+                <label asp-for="AircraftId" class="form-label"></label>
                 <select asp-for="AircraftId"
-                        class="form-control"
+                        class="form-select"
                         asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.AircraftOptions, nameof(LookupOptionViewModel.Value), nameof(LookupOptionViewModel.Text)))"></select>
                 <span asp-validation-for="AircraftId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="form-actions">
+                <a class="btn btn-outline-secondary btn-soft" asp-action="Index">Cancel</a>
+                <button type="submit" class="btn btn-primary btn-strong">Create flight</button>
             </div>
         </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    </section>
+</section>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

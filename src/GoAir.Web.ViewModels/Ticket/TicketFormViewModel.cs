@@ -1,11 +1,11 @@
 namespace GoAir.Web.ViewModels.Ticket
 {
+    using System.ComponentModel.DataAnnotations;
+
     using Data.Common;
     using Data.Models;
     using Common;
 
-    using System.ComponentModel.DataAnnotations;
-    
     public class TicketFormViewModel
     {
         public Guid Id { get; set; }
@@ -24,15 +24,10 @@ namespace GoAir.Web.ViewModels.Ticket
 
         [Display(Name = "Purchased On")]
         [DataType(DataType.DateTime)]
-        public DateTime PurchasedOn { get; set; }
-
-        [Display(Name = "User")]
-        public string UserId { get; set; } = string.Empty;
+        public DateTime? PurchasedOn { get; set; }
 
         [Display(Name = "Flight")]
         public Guid FlightId { get; set; }
-
-        public IEnumerable<LookupOptionViewModel> Users { get; set; } = [];
 
         public IEnumerable<LookupOptionViewModel> Flights { get; set; } = [];
     }

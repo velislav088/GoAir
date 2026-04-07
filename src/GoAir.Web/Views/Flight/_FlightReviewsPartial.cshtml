@@ -1,0 +1,22 @@
+@model IEnumerable<ReviewViewModel>
+
+@if (Model.Any())
+{
+    <div class="d-flex flex-column gap-3">
+    @foreach (ReviewViewModel review in Model)
+    {
+        <article class="border rounded-3 p-3">
+            <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
+                <strong>@review.User</strong>
+                <span class="text-muted">@review.CreatedOn.ToString("g")</span>
+            </div>
+            <div class="mb-2">Rating: @review.Rating / 5</div>
+            <p class="mb-0">@review.Comment</p>
+        </article>
+    }
+    </div>
+}
+else
+{
+    <p class="empty-state mb-0">No reviews have been added for this flight yet.</p>
+}

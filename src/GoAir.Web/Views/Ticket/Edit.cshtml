@@ -1,62 +1,67 @@
 @model TicketFormViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Ticket";
 }
 
-<h1>Edit</h1>
+<section class="form-shell">
+    <div class="form-shell__header">
+        <div>
+            <p class="form-shell__eyebrow">Ticketing</p>
+            <h1 class="form-shell__title">Edit Ticket</h1>
+            <p class="form-shell__subtitle">Update the reservation details without fighting the date picker.</p>
+        </div>
+        <a class="btn btn-outline-secondary btn-soft" asp-action="Index">Back to list</a>
+    </div>
 
-<h4>Ticket</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <section class="form-card">
+        <form asp-action="Edit" class="app-form">
+            <div asp-validation-summary="ModelOnly" class="text-danger validation-summary"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="SeatNumber" class="control-label"></label>
-                <input asp-for="SeatNumber" class="form-control" />
-                <span asp-validation-for="SeatNumber" class="text-danger"></span>
+
+            <div class="form-grid form-grid--two">
+                <div class="form-field">
+                    <label asp-for="SeatNumber" class="form-label"></label>
+                    <input asp-for="SeatNumber" class="form-control" />
+                    <span asp-validation-for="SeatNumber" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Price" class="form-label"></label>
+                    <input asp-for="Price" class="form-control" type="number" step="0.01" min="0.01" inputmode="decimal" />
+                    <div class="form-hint">Decimals are allowed. You can enter values like 249.99.</div>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="FareClass" class="form-label"></label>
+                    <select asp-for="FareClass" class="form-select" asp-items="Html.GetEnumSelectList<GoAir.Data.Models.FareClass>()"></select>
+                    <span asp-validation-for="FareClass" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="PurchasedOn" class="form-label"></label>
+                    <input asp-for="PurchasedOn" class="form-control" type="datetime-local" />
+                    <div class="form-hint">Optional. Clear it to keep the current saved purchase time.</div>
+                    <span asp-validation-for="PurchasedOn" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FareClass" class="control-label"></label>
-                <select asp-for="FareClass" class="form-control" asp-items="Html.GetEnumSelectList<GoAir.Data.Models.FareClass>()"></select>
-                <span asp-validation-for="FareClass" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurchasedOn" class="control-label"></label>
-                <input asp-for="PurchasedOn" class="form-control" />
-                <span asp-validation-for="PurchasedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId"
-                        class="form-control"
-                        asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.Users, nameof(LookupOptionViewModel.Value), nameof(LookupOptionViewModel.Text)))"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FlightId" class="control-label"></label>
+
+            <div class="form-field">
+                <label asp-for="FlightId" class="form-label"></label>
                 <select asp-for="FlightId"
-                        class="form-control"
+                        class="form-select"
                         asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.Flights, nameof(LookupOptionViewModel.Value), nameof(LookupOptionViewModel.Text)))"></select>
                 <span asp-validation-for="FlightId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="form-actions">
+                <a class="btn btn-outline-secondary btn-soft" asp-action="Index">Cancel</a>
+                <button type="submit" class="btn btn-primary btn-strong">Save changes</button>
             </div>
         </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    </section>
+</section>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

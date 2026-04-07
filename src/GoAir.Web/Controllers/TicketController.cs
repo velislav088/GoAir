@@ -1,24 +1,28 @@
 namespace GoAir.Web.Controllers
 {
+    using System.Security.Claims;
+
+    using GCommon;
     using Services.Common;
     using Services.Core.Contracts;
     using ViewModels.Ticket;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class TicketController(ITicketService ticketService) : Controller
     {
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchTerm, int page = 1)
         {
-            return View(await ticketService.GetAllAsync());
+            return View(await ticketService.GetAllAsync(GetCurrentUserId(), User.IsInRole(ApplicationRoles.Administrator), searchTerm, page));
         }
 
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
-                return NotFound();
-
-            TicketViewModel? ticket = await ticketService.GetByIdAsync(id.Value);
+            return NotFound();
+            TicketViewModel? ticket = await ticketService.GetByIdAsync(id.Value, GetCurrentUserId(), User.IsInRole(ApplicationRoles.Administrator));
             return ticket == null ? NotFound() : View(ticket);
         }
 
@@ -36,8 +40,7 @@ namespace GoAir.Web.Controllers
                 await ticketService.PopulateFormOptionsAsync(model);
                 return View(model);
             }
-
-            ServiceResult result = await ticketService.CreateAsync(model);
+            ServiceResult result = await ticketService.CreateAsync(model, GetCurrentUserId());
             if (!result.Succeeded)
             {
                 ApplyErrors(result);
@@ -51,9 +54,8 @@ namespace GoAir.Web.Controllers
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
-                return NotFound();
-
-            TicketFormViewModel? model = await ticketService.GetForEditAsync(id.Value);
+            return NotFound();
+            TicketFormViewModel? model = await ticketService.GetForEditAsync(id.Value, GetCurrentUserId(), User.IsInRole(ApplicationRoles.Administrator));
             return model == null ? NotFound() : View(model);
         }
 
@@ -62,17 +64,16 @@ namespace GoAir.Web.Controllers
         public async Task<IActionResult> Edit(Guid id, TicketFormViewModel model)
         {
             if (id != model.Id)
-                return NotFound();
+            return NotFound();
 
             if (!ModelState.IsValid)
             {
                 await ticketService.PopulateFormOptionsAsync(model);
                 return View(model);
             }
-
-            ServiceResult result = await ticketService.UpdateAsync(model);
+            ServiceResult result = await ticketService.UpdateAsync(model, GetCurrentUserId(), User.IsInRole(ApplicationRoles.Administrator));
             if (result.NotFound)
-                return NotFound();
+            return NotFound();
 
             if (!result.Succeeded)
             {
@@ -87,9 +88,8 @@ namespace GoAir.Web.Controllers
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
-                return NotFound();
-
-            TicketViewModel? ticket = await ticketService.GetForDeleteAsync(id.Value);
+            return NotFound();
+            TicketViewModel? ticket = await ticketService.GetForDeleteAsync(id.Value, GetCurrentUserId(), User.IsInRole(ApplicationRoles.Administrator));
             return ticket == null ? NotFound() : View(ticket);
         }
 
@@ -97,14 +97,14 @@ namespace GoAir.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            ServiceResult result = await ticketService.DeleteAsync(id);
+            ServiceResult result = await ticketService.DeleteAsync(id, GetCurrentUserId(), User.IsInRole(ApplicationRoles.Administrator));
             if (result.NotFound)
-                return NotFound();
+            return NotFound();
 
             if (!result.Succeeded)
             {
                 ApplyErrors(result);
-                TicketViewModel? ticket = await ticketService.GetForDeleteAsync(id);
+                TicketViewModel? ticket = await ticketService.GetForDeleteAsync(id, GetCurrentUserId(), User.IsInRole(ApplicationRoles.Administrator));
                 return ticket == null ? NotFound() : View("Delete", ticket);
             }
 
@@ -116,8 +116,12 @@ namespace GoAir.Web.Controllers
             foreach ((string key, IReadOnlyCollection<string> messages) in result.Errors)
             {
                 foreach (string message in messages)
-                    ModelState.AddModelError(key, message);
+                ModelState.AddModelError(key, message);
             }
+        }
+        private string GetCurrentUserId()
+        {
+            return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
         }
     }
 }

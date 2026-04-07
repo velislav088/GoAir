@@ -1,41 +1,107 @@
-@model IEnumerable<TicketViewModel>
+@model TicketIndexViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tickets";
 }
 
-<h1>Index</h1>
+<section class="content-card">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="section-title mb-1">Ticket list</h1>
+            <p class="section-subtitle mb-0">Search reservations, review flight assignments, and manage booking records.</p>
+        </div>
+        @if (Model.IsAdmin)
+        {
+            <a class="btn btn-primary" asp-area="Administration" asp-controller="Ticket" asp-action="Create">Create Ticket</a>
+        }
+        else
+        {
+            <a class="btn btn-primary" asp-action="Create">Create Ticket</a>
+        }
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.SeatNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.Price)</th>
-            <th>@Html.DisplayNameFor(model => model.FareClass)</th>
-            <th>@Html.DisplayNameFor(model => model.PurchasedOn)</th>
-            <th>@Html.DisplayNameFor(model => model.User)</th>
-            <th>@Html.DisplayNameFor(model => model.Flight)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>@Html.DisplayFor(modelItem => item.SeatNumber)</td>
-            <td>@Html.DisplayFor(modelItem => item.Price)</td>
-            <td>@Html.DisplayFor(modelItem => item.FareClass)</td>
-            <td>@Html.DisplayFor(modelItem => item.PurchasedOn)</td>
-            <td>@Html.DisplayFor(modelItem => item.User)</td>
-            <td>@Html.DisplayFor(modelItem => item.Flight)</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <form method="get" class="row g-3 align-items-end mb-4">
+        <div class="col-md-9">
+            <label class="form-label" asp-for="SearchTerm">Search</label>
+            <input class="form-control" asp-for="SearchTerm" placeholder="Seat, fare class, flight, or user" />
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button class="btn btn-primary flex-fill" type="submit">Apply</button>
+            <a class="btn btn-outline-secondary flex-fill" asp-action="Index">Reset</a>
+        </div>
+    </form>
+
+    @if (Model.Tickets.Any())
+    {
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Seat</th>
+                        <th>Price</th>
+                        <th>Fare Class</th>
+                        <th>Purchased On</th>
+                        <th>User</th>
+                        <th>Flight</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (TicketViewModel item in Model.Tickets)
+                {
+                    bool canManage = Model.IsAdmin || item.UserId == Model.CurrentUserId;
+                    <tr>
+                        <td class="fw-semibold">@item.SeatNumber</td>
+                        <td>@item.Price</td>
+                        <td>@item.FareClass</td>
+                        <td>@item.PurchasedOn.ToString("g")</td>
+                        <td>@item.User</td>
+                        <td>@item.Flight</td>
+                        <td class="text-nowrap">
+                            @if (Model.IsAdmin)
+                            {
+                                <a asp-area="Administration" asp-controller="Ticket" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                            }
+                            else
+                            {
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                            }
+                            @if (canManage)
+                            {
+                                if (Model.IsAdmin)
+                                {
+                                    <text> | </text><a asp-area="Administration" asp-controller="Ticket" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                    <text> | </text><a asp-area="Administration" asp-controller="Ticket" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                }
+                                else
+                                {
+                                    <text> | </text><a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                    <text> | </text><a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="empty-state mb-0">No tickets matched the current search.</p>
+    }
+
+    <div class="pagination-bar mt-4">
+        <span>Page @Model.CurrentPage of @Model.TotalPages</span>
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-secondary @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+               asp-action="Index"
+               asp-route-searchTerm="@Model.SearchTerm"
+               asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
+            <a class="btn btn-outline-secondary @(Model.CurrentPage == Model.TotalPages ? "disabled" : string.Empty)"
+               asp-action="Index"
+               asp-route-searchTerm="@Model.SearchTerm"
+               asp-route-page="@(Model.CurrentPage + 1)">Next</a>
+        </div>
+    </div>
+</section>

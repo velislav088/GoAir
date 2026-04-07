@@ -18,6 +18,8 @@ namespace GoAir.Web.ViewModels.Review
         [Display(Name = "User")]
         public string User { get; set; } = string.Empty;
 
+        public string UserId { get; set; } = string.Empty;
+
         [Display(Name = "Flight")]
         public string Flight { get; set; } = string.Empty;
     }

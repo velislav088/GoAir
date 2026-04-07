@@ -1,10 +1,10 @@
 namespace GoAir.Web.ViewModels.Flight
 {
+    using System.ComponentModel.DataAnnotations;
+
     using Data.Common;
     using Data.Models;
     using Common;
-
-    using System.ComponentModel.DataAnnotations;
 
     public class FlightFormViewModel
     {

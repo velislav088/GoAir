@@ -1,43 +1,51 @@
 @model AircraftViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Aircraft";
 }
 
-<h1>Edit</h1>
+<section class="form-shell">
+    <div class="form-shell__header">
+        <div>
+            <p class="form-shell__eyebrow">Fleet</p>
+            <h1 class="form-shell__title">Edit Aircraft</h1>
+            <p class="form-shell__subtitle">Refine fleet data with the same stronger button treatment and responsive spacing.</p>
+        </div>
+        <a class="btn btn-outline-secondary btn-soft" asp-action="Index">Back to list</a>
+    </div>
 
-<h4>Aircraft</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <section class="form-card">
+        <form asp-action="Edit" class="app-form">
+            <div asp-validation-summary="ModelOnly" class="text-danger validation-summary"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Model" class="control-label"></label>
-                <input asp-for="Model" class="form-control" />
-                <span asp-validation-for="Model" class="text-danger"></span>
+
+            <div class="form-grid form-grid--two">
+                <div class="form-field">
+                    <label asp-for="Manufacturer" class="form-label"></label>
+                    <input asp-for="Manufacturer" class="form-control" />
+                    <span asp-validation-for="Manufacturer" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Model" class="form-label"></label>
+                    <input asp-for="Model" class="form-control" />
+                    <span asp-validation-for="Model" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Manufacturer" class="control-label"></label>
-                <input asp-for="Manufacturer" class="form-control" />
-                <span asp-validation-for="Manufacturer" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Capacity" class="control-label"></label>
+
+            <div class="form-field">
+                <label asp-for="Capacity" class="form-label"></label>
                 <input asp-for="Capacity" class="form-control" />
                 <span asp-validation-for="Capacity" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="form-actions">
+                <a class="btn btn-outline-secondary btn-soft" asp-action="Index">Cancel</a>
+                <button type="submit" class="btn btn-primary btn-strong">Save changes</button>
             </div>
         </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    </section>
+</section>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

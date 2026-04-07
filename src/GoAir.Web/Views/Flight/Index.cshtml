@@ -1,57 +1,97 @@
-@model IEnumerable<FlightViewModel>
+@model FlightIndexViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Flights";
 }
 
-<h1>Index</h1>
+<section class="content-card">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="section-title mb-1">Flight schedule</h1>
+            <p class="section-subtitle mb-0">Search routes, sort departures, and review upcoming availability.</p>
+        </div>
+        @if (Model.IsAdmin)
+        {
+            <a class="btn btn-primary" asp-area="Administration" asp-controller="Flight" asp-action="Create">Add flight</a>
+        }
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FlightNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DepartureTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArrivalTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DepartureAirport)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArrivalAirport)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Aircraft)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>@Html.DisplayFor(modelItem => item.FlightNumber)</td>
-            <td>@Html.DisplayFor(modelItem => item.DepartureTime)</td>
-            <td>@Html.DisplayFor(modelItem => item.ArrivalTime)</td>
-            <td>@Html.DisplayFor(modelItem => item.Status)</td>
-            <td>@Html.DisplayFor(modelItem => item.DepartureAirport)</td>
-            <td>@Html.DisplayFor(modelItem => item.ArrivalAirport)</td>
-            <td>@Html.DisplayFor(modelItem => item.Aircraft)</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <form method="get" class="row g-3 align-items-end mb-4">
+        <div class="col-md-6">
+            <label class="form-label" asp-for="SearchTerm">Search</label>
+            <input class="form-control" asp-for="SearchTerm" placeholder="Flight number, city, aircraft" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" asp-for="SortOrder">Sort by</label>
+            <select class="form-select" asp-for="SortOrder">
+                <option value="@FlightSorting.DepartureSoonest">Departure soonest</option>
+                <option value="@FlightSorting.FlightNumber">Flight number</option>
+                <option value="@FlightSorting.ArrivalCity">Arrival city</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button class="btn btn-primary flex-fill" type="submit">Apply</button>
+            <a class="btn btn-outline-secondary flex-fill" asp-action="Index">Reset</a>
+        </div>
+    </form>
+
+    @if (Model.Flights.Any())
+    {
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Flight</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Status</th>
+                        <th>Route</th>
+                        <th>Aircraft</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (FlightViewModel item in Model.Flights)
+                {
+                    <tr>
+                        <td class="fw-semibold">@item.FlightNumber</td>
+                        <td>@item.DepartureTime.ToString("g")</td>
+                        <td>@item.ArrivalTime.ToString("g")</td>
+                        <td>@item.Status</td>
+                        <td>@item.DepartureAirport to @item.ArrivalAirport</td>
+                        <td>@item.Aircraft</td>
+                        <td class="text-nowrap">
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                            @if (Model.IsAdmin)
+                            {
+                                <text> | </text><a asp-area="Administration" asp-controller="Flight" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                <text> | </text><a asp-area="Administration" asp-controller="Flight" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="empty-state mb-0">No flights matched the current search.</p>
+    }
+
+    <div class="pagination-bar mt-4">
+        <span>Page @Model.CurrentPage of @Model.TotalPages</span>
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-secondary @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+               asp-action="Index"
+               asp-route-searchTerm="@Model.SearchTerm"
+               asp-route-sortOrder="@Model.SortOrder"
+               asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
+            <a class="btn btn-outline-secondary @(Model.CurrentPage == Model.TotalPages ? "disabled" : string.Empty)"
+               asp-action="Index"
+               asp-route-searchTerm="@Model.SearchTerm"
+               asp-route-sortOrder="@Model.SortOrder"
+               asp-route-page="@(Model.CurrentPage + 1)">Next</a>
+        </div>
+    </div>
+</section>

@@ -1,9 +1,9 @@
 namespace GoAir.Web.ViewModels.Airport
 {
-    using Data.Common;
-
     using System.ComponentModel.DataAnnotations;
 
+    using Data.Common;
+    
     public class AirportViewModel
     {
         public Guid Id { get; set; }
